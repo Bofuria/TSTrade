@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "733907389591",
+    "project_id": "tstrade-2b601",
+    "storage_bucket": "tstrade-2b601.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:733907389591:android:65a4a63b56455708ed2dd2",
+        "android_client_info": {
+          "package_name": "com.example.tstrade"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "733907389591-p4mpv1gmqsi9trk2ceg8vqm7kub1g64i.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.tstrade",
+            "certificate_hash": "f96f2eb1bd355908ab3ac77da652404b4059f832"
+          }
+        },
+        {
+          "client_id": "733907389591-tj0677vg2f1ug0g7ddtr7fkq0becavev.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAaJtfvov2BF7ipa9hYEGve0COzM90m7fo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "733907389591-tj0677vg2f1ug0g7ddtr7fkq0becavev.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
