@@ -30,6 +30,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.tstrade.domain.entities.EventItem
 import com.example.tstrade.domain.entities.User
 import com.google.firebase.Firebase
@@ -39,7 +40,8 @@ import com.google.firebase.firestore.firestore
 
 @Composable
 fun EventsScreen(
-    viewModel : EventsViewModel
+    viewModel : EventsViewModel,
+    navController: NavController
 ) {
     val state = viewModel.state.collectAsState()
     Column {
@@ -141,7 +143,7 @@ private fun EventCard(item: EventItem) {
                     )
 
                     Text(
-                        text = item.author.name,
+                        text = item.author,
                         modifier = Modifier
                             .weight(0.2f)
                     )
@@ -168,8 +170,10 @@ private fun EventCard(item: EventItem) {
                         modifier = Modifier
                             .height(this@BoxWithConstraints.maxHeight * 0.6f)
                     ) {
-                        itemsIndexed(item.attendants) { _, user ->
-                            Text(text = user.name)
+                        item.attendants?.let {
+                            items(it) { user ->
+                                Text(text = user)
+                            }
                         }
                     }
 

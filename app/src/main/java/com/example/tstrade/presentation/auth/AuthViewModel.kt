@@ -21,10 +21,6 @@ class AuthViewModel @Inject constructor(
 
     val currentUser = fetchCurrentUser()
 
-//    init {
-//        getCurrentUser()
-//    }
-
     private fun fetchCurrentUser() = observer.getAuthState(viewModelScope)
 
     fun oneTapSignIn() = CoroutineScope(Dispatchers.IO).launch {

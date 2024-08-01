@@ -21,6 +21,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
@@ -67,6 +68,7 @@ fun LoginScreen(
             Arrangement.spacedBy(8.dp),
             Alignment.CenterHorizontally
         ) {
+
             Button(
                 onClick = { /*TODO*/ },
                 modifier = Modifier
@@ -112,4 +114,9 @@ fun AuthLoginProgressIndicator() {
             strokeWidth = 5.dp
         )
     }
+}
+
+@Composable
+fun loginPasswordForm() { // TODO: Implement
+
 }

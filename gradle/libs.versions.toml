@@ -1,25 +1,24 @@
 [versions]
 agp = "8.5.1"
 kotlin = "1.9.24"
-coreKtx = "1.13.1"
+coreKtx = "1.10.1"
 junit = "4.13.2"
 junitVersion = "1.2.1"
-espressoCore = "3.6.1"
-appcompat = "1.7.0"
+espressoCore = "3.5.1"
+appcompat = "1.6.1"
 hiltDagger = "2.50"
 composeBom = "2024.06.00"
 lifecycleVersion = "2.8.4"
 activityCompose = "1.9.1"
 googleService = "4.4.2"
-firebaseBom = "33.1.2"
+firebaseBom = "33.1.1"
 composeNavigation = "2.7.7"
 hiltNavigation = "1.2.0"
 playService = "20.0.1"
-material = "1.12.0"
+material = "1.10.0"
 ksp = "1.9.24-1.0.20"
-lifecycleCompilerVersion = "2.8.3"
 hiltAndroidx = "1.2.0"
-multidex = "2.0.1"
+firebaseAdmin = "9.3.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -27,10 +26,6 @@ junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
-androidx-lifecycle-compiler = { group = "androidx.lifecycle", name = "lifecycle-compiler", version = "2.8.3"}
-
-dagger-compiler = { group = "com.google.dagger", name = "dagger-compiler", version.ref = "hiltDagger" }
-dagger = { group = "com.google.dagger", name = "dagger", version.ref = "hiltDagger" }
 
 hilt-android-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hiltDagger" }
 hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hiltDagger" }
@@ -38,13 +33,14 @@ hilt-andoroidx-compiler = { group = "androidx.hilt", name = "hilt-compiler", ver
 hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hiltNavigation" }
 
 compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
-compose-foundation = { group = "androidx.compose.foundation", name = "foundation" }
-compose-material = { group = "androidx.compose.material3", name = "material3" }
+compose-material = { group = "androidx.compose.material3", name = "material3-android" }
 compose-ui = { group = "androidx.compose.ui", name = "ui" }
 compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
 compose-ui-tooling-debug = { group = "androidx.compose.ui", name = "ui-tooling" }
 compose-runtime-livedata = { group = "androidx.compose.runtime", name = "runtime-livedata" }
 navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "composeNavigation" }
+
+#????
 compose-runtime-viewmodel = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "lifecycleVersion" }
 compose-runtime-activity = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
 play-services-auth = { group = "com.google.android.gms", name = "play-services-auth", version.ref = "playService" }
@@ -53,6 +49,7 @@ android-material = { group = "com.google.android.material", name = "material", v
 firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBom" }
 firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics" }
 firebase-auth = { group = "com.google.firebase", name = "firebase-auth" }
+firebase-admin = { group = "com.google.firebase", name = "firebase-admin", version.ref = "firebaseAdmin" }
 firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore" }
 
 [plugins]

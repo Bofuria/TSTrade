@@ -29,16 +29,15 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            signingConfig = signingConfigs.getByName("debug")
-        }
-        buildFeatures {
-            compose = true
-            viewBinding = true
-        }
-        debug {
-            isMinifyEnabled = false
+//            signingConfig = signingConfigs.getByName("debug")
         }
     }
+
+    buildFeatures {
+        compose = true
+        viewBinding = true
+    }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
@@ -51,6 +50,16 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+
+    buildToolsVersion = "34.0.0"
+
+    packaging {
+        resources.excludes.add("META-INF/**")
+        resources.excludes.add("protobuf.meta")
+        resources.excludes.add("google/firestore/v1/**")
+        resources.excludes.add("google/protobuf/**")
+    }
+
 }
 
 dependencies {
@@ -60,10 +69,8 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-    annotationProcessor(libs.androidx.lifecycle.compiler)
 
     implementation(platform(libs.compose.bom))
-    implementation(libs.compose.foundation)
     implementation(libs.compose.ui)
     implementation(libs.compose.ui.tooling.preview)
     implementation(libs.compose.ui.tooling.debug)
@@ -73,9 +80,6 @@ dependencies {
     implementation(libs.compose.material)
     implementation(libs.navigation.compose)
     implementation(libs.android.material)
-
-    implementation(libs.dagger)
-    annotationProcessor(libs.dagger.compiler)
 
     implementation(libs.hilt.android)
     annotationProcessor(libs.hilt.android.compiler)
@@ -87,5 +91,6 @@ dependencies {
     implementation(libs.firebase.auth)
     implementation(libs.firebase.firestore)
     implementation(libs.play.services.auth)
+    implementation(libs.firebase.admin)
 
 }

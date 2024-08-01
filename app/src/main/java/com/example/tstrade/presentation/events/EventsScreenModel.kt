@@ -6,6 +6,7 @@ import javax.annotation.concurrent.Immutable
 
 @Immutable
 sealed class EventsScreenUiEvent {
+    data class ShowData(val items: List<EventItem>) : EventsScreenUiEvent()
     data class JoinEvent(val activity: EventItem, val newUser: User) : EventsScreenUiEvent()
     data class LeaveEvent(val activity: EventItem, val leavingUser: User) : EventsScreenUiEvent()
     data class OnChangeDialogState(val show: Boolean) : EventsScreenUiEvent()
