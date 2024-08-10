@@ -18,20 +18,16 @@ import dagger.hilt.components.SingletonComponent
 class FirebaseModule {
 
     @Provides
-    fun provideFirebaseAuth(): FirebaseAuth = FirebaseAuth.getInstance()
+    fun provideFirebaseAuth(): FirebaseAuth  {
+        val auth = FirebaseAuth.getInstance()
+        auth.useEmulator("127.0.0.1", 9099)
+        return auth
+    }
 
     @Provides
     fun provideFirestore(): FirebaseFirestore {
-        val settings = firestoreSettings {
-            setLocalCacheSettings(persistentCacheSettings {
-                isPersistenceEnabled = false
-            })
-        }
-
         val firestore = Firebase.firestore
-        firestore.useEmulator("10.0.2.2", 8080)
-        firestore.firestoreSettings = settings
-
+        firestore.useEmulator("127.0.0.1", 8080)
         return firestore
     }
 

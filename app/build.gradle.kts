@@ -1,3 +1,5 @@
+import com.android.build.gradle.internal.dsl.decorator.SupportedPropertyType.Collection.List.type
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
@@ -5,7 +7,6 @@ plugins {
     alias(libs.plugins.google.services)
     alias(libs.plugins.ksp)
 }
-
 
 android {
     namespace = "com.example.tstrade"
@@ -17,7 +18,6 @@ android {
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
-        multiDexEnabled = false
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -59,12 +59,11 @@ android {
         resources.excludes.add("google/firestore/v1/**")
         resources.excludes.add("google/protobuf/**")
     }
-
 }
 
 dependencies {
 
-    implementation(libs.androidx.core.ktx)
+//    implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
@@ -75,22 +74,32 @@ dependencies {
     implementation(libs.compose.ui.tooling.preview)
     implementation(libs.compose.ui.tooling.debug)
     implementation(libs.compose.runtime.livedata)
-    implementation(libs.compose.runtime.viewmodel)
-    implementation(libs.compose.runtime.activity)
+//    implementation(libs.compose.runtime.viewmodel)
+//    implementation(libs.compose.runtime.activity)
     implementation(libs.compose.material)
     implementation(libs.navigation.compose)
     implementation(libs.android.material)
 
-    implementation(libs.hilt.android)
-    annotationProcessor(libs.hilt.android.compiler)
+
     implementation(libs.hilt.navigation.compose)
-    annotationProcessor(libs.hilt.andoroidx.compiler)
+
+//    implementation(libs.dagger.core)
+//    ksp(libs.dagger.compiler)
+
+//    api(libs.dagger.android)
+//    api(libs.dagger.android.support)
+//    ksp(libs.dagger.android.processor)
+
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.android.compiler)
+
+
+//    implementation(libs.hilt.compiler)
 
     implementation(platform(libs.firebase.bom))
-    implementation(libs.firebase.analytics)
     implementation(libs.firebase.auth)
     implementation(libs.firebase.firestore)
     implementation(libs.play.services.auth)
-    implementation(libs.firebase.admin)
 
 }
+

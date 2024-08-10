@@ -1,12 +1,12 @@
 [versions]
-agp = "8.5.1"
+agp = "8.5.0"
 kotlin = "1.9.24"
 coreKtx = "1.10.1"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.5.1"
 appcompat = "1.6.1"
-hiltDagger = "2.50"
+hiltDagger = "2.49"
 composeBom = "2024.06.00"
 lifecycleVersion = "2.8.4"
 activityCompose = "1.9.1"
@@ -14,11 +14,11 @@ googleService = "4.4.2"
 firebaseBom = "33.1.1"
 composeNavigation = "2.7.7"
 hiltNavigation = "1.2.0"
-playService = "20.0.1"
+playService = "20.7.0"
 material = "1.10.0"
 ksp = "1.9.24-1.0.20"
-hiltAndroidx = "1.2.0"
 firebaseAdmin = "9.3.0"
+kapt = "2.0.10"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -27,10 +27,18 @@ androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "j
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 
+
+hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hiltNavigation" }
+
+dagger-core = { group = "com.google.dagger", name = "dagger", version.ref = "hiltDagger" }
+dagger-compiler = { group = "com.google.dagger", name = "dagger-compiler", version.ref = "hiltDagger" }
+
+dagger-android = { group = "com.google.dagger", name = "dagger-android", version.ref = "hiltDagger" }
+dagger-android-support = { group = "com.google.dagger", name = "dagger-android-support", version.ref = "hiltDagger" }
+dagger-android-processor = { group = "com.google.dagger", name = "dagger-android-processor", version.ref = "hiltDagger" }
+
 hilt-android-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hiltDagger" }
 hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hiltDagger" }
-hilt-andoroidx-compiler = { group = "androidx.hilt", name = "hilt-compiler", version.ref = "hiltAndroidx" }
-hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hiltNavigation" }
 
 compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
 compose-material = { group = "androidx.compose.material3", name = "material3-android" }
@@ -58,5 +66,3 @@ jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = 
 dagger-hilt = { id = "com.google.dagger.hilt.android", version.ref = "hiltDagger" }
 google-services = { id = "com.google.gms.google-services", version.ref = "googleService" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
-
-

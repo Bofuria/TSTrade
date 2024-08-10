@@ -70,7 +70,7 @@ fun LoginScreen(
         ) {
 
             Button(
-                onClick = { /*TODO*/ },
+                onClick = { authViewModel.oneTapSignIn() },
                 modifier = Modifier
                     .size(width = 300.dp, height = 50.dp)
                     .fillMaxWidth()

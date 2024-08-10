@@ -11,7 +11,6 @@ import javax.inject.Inject
 
 class UserRepository @Inject constructor(
     private val db: FirebaseFirestore,
-    private val authViewModel: AuthViewModel
 ) {
 
     fun fetchUser(id: String): User? {
