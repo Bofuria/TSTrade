@@ -12,6 +12,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -20,14 +21,14 @@ class FirebaseModule {
     @Provides
     fun provideFirebaseAuth(): FirebaseAuth  {
         val auth = FirebaseAuth.getInstance()
-        auth.useEmulator("127.0.0.1", 9099)
+//        auth.useEmulator("10.0.2.2", 9099)
         return auth
     }
 
     @Provides
     fun provideFirestore(): FirebaseFirestore {
         val firestore = Firebase.firestore
-        firestore.useEmulator("127.0.0.1", 8080)
+        firestore.useEmulator("10.0.2.2", 8080)
         return firestore
     }
 

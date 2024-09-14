@@ -64,7 +64,7 @@ fun LoginScreen(
             modifier = Modifier
                 .padding(paddingValues)
                 .fillMaxSize()
-                .wrapContentSize(Alignment.TopCenter),
+                .wrapContentSize(Alignment.Center),
             Arrangement.spacedBy(8.dp),
             Alignment.CenterHorizontally
         ) {
@@ -82,6 +82,24 @@ fun LoginScreen(
             ) {
                 Text(
                     text = "Sign in with Google",
+                    modifier = Modifier.padding(6.dp),
+                    color = Color.White.copy(alpha = 0.5f)
+                )
+            }
+
+            Button(
+                onClick = { authViewModel.anonymousSignIn() },
+                modifier = Modifier
+                    .size(width = 300.dp, height = 50.dp)
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+                shape = RoundedCornerShape(10.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.Black
+                )
+            ) {
+                Text(
+                    text = "Skip",
                     modifier = Modifier.padding(6.dp),
                     color = Color.White.copy(alpha = 0.5f)
                 )

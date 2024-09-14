@@ -1,5 +1,6 @@
 package com.example.tstrade.presentation.auth
 
+import android.provider.ContactsContract.Data
 import androidx.lifecycle.ViewModel
 import com.example.tstrade.SignInObserver
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -31,5 +32,15 @@ class AuthViewModel @Inject constructor(
     fun signInWithGoogle(credential: SignInCredential) = CoroutineScope(Dispatchers.IO).launch {
         DataProvider.googleSignInResponse = Response.Loading
         DataProvider.googleSignInResponse = observer.signInWithGoogle(credential)
+    }
+
+    fun anonymousSignIn() = CoroutineScope(Dispatchers.IO).launch {
+        DataProvider.anonymousSignInResponse = Response.Loading
+        DataProvider.anonymousSignInResponse = observer.signInAnonymously()
+    }
+
+    fun signOut() = CoroutineScope(Dispatchers.IO).launch {
+        DataProvider.signOutResponse = Response.Loading
+        DataProvider.signOutResponse = observer.signOut()
     }
 }

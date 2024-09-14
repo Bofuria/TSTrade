@@ -10,22 +10,24 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -33,28 +35,31 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TimePicker
 import androidx.compose.material3.TimePickerState
+import androidx.compose.material3.TriStateCheckbox
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.state.ToggleableState
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import androidx.compose.ui.window.Popup
 import androidx.navigation.NavController
 import com.example.tstrade.domain.entities.EventItem
 import com.example.tstrade.domain.entities.User
+import com.google.firebase.auth.FirebaseUser
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -64,7 +69,8 @@ import java.util.Locale
 @Composable
 fun EventsScreen(
     viewModel : EventsViewModel,
-    navController: NavController
+    navController: NavController,
+    currentUser: FirebaseUser
 ) {
     val state = viewModel.state.collectAsState()
     Column {
@@ -73,9 +79,11 @@ fun EventsScreen(
         }
 
         EventsScreenContent(
-            state.value.data,
+            state.value.events,
+            state.value.users,
             state.value.isShowAddDialog,
-            onAddEventButtonClick = { viewModel.changeAddDialogState(true)},
+            currentUser = currentUser,
+            onAddEventButtonClick = { eventItem -> viewModel.createEvent(eventItem)},
             onLeaveEventButtonClick ={eventItem, user -> viewModel.leaveEvent(eventItem, user)},
             onJoinEventButtonClick = { eventItem, user -> viewModel.joinEvent(eventItem, user) },
             onDismissDialogClick = { viewModel.changeAddDialogState(false)}
@@ -86,7 +94,9 @@ fun EventsScreen(
 @Composable
 private fun EventsScreenContent(
     events: List<EventItem>,
+    users: List<User>,
     isShowDialog:Boolean,
+    currentUser: FirebaseUser,
     onAddEventButtonClick: (EventItem) -> Unit,
     onLeaveEventButtonClick: (EventItem, User) -> Unit,
     onJoinEventButtonClick: (EventItem, User) -> Unit,
@@ -118,7 +128,12 @@ private fun EventsScreenContent(
     )
 
     if(showEventCreateDialog) {
-        CreateEventDialog(dismissDialog = { showEventCreateDialog = false})
+        CreateEventDialog(
+            users = users,
+            currentUser = currentUser,
+            dismissDialog = { showEventCreateDialog = false },
+            addEvent = onAddEventButtonClick
+        )
     }
 
 
@@ -228,7 +243,19 @@ fun FloatingButton(onClick: () -> Unit) {
 }
 
 @Composable
-fun CreateEventDialog(dismissDialog: () -> Unit) {
+fun CreateEventDialog(
+    users: List<User>,
+    currentUser: FirebaseUser,
+    dismissDialog: () -> Unit,
+    addEvent: (EventItem) -> Unit) {
+
+    var eventTitle by remember { mutableStateOf("") }
+    var eventDescription by remember { mutableStateOf("") }
+    var eventDate by remember { mutableStateOf("") }
+    var eventTime by remember { mutableStateOf("") }
+    var invitedUsers by remember { mutableStateOf(emptyList<User>()) }
+
+
     Dialog(
         properties = DialogProperties(usePlatformDefaultWidth = false),
         onDismissRequest = dismissDialog
@@ -236,7 +263,7 @@ fun CreateEventDialog(dismissDialog: () -> Unit) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp)
+//                .padding(16.dp)
                 .background(Color.White),
 
         ) {
@@ -245,35 +272,70 @@ fun CreateEventDialog(dismissDialog: () -> Unit) {
                     .fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(
-                    text = "Create Event",
-                    modifier = Modifier
-                        .padding(8.dp),
-                    style = TextStyle(
-                        fontSize = 30.sp,
-                        fontWeight = FontWeight.Bold,
+
+                Row {
+
+                    IconButton(onClick = dismissDialog) {
+                        Icon(
+                            imageVector = Icons.Default.Close,
+                            contentDescription = "Exit"
+                        )
+                    }
+
+                    Text(
+                        text = "Create Event",
+                        modifier = Modifier
+                            .padding(16.dp),
+                        style = TextStyle(
+                            fontSize = 30.sp,
+                            fontWeight = FontWeight.Bold,
+                        )
                     )
-                )
+
+                    Button(
+                        onClick = {
+                            addEvent(
+                                EventItem(
+                                    eventId = currentUser.uid,
+                                    author = "",
+                                    name = eventTitle,
+                                    description = eventDescription,
+                                    attendants = mutableListOf(),
+                                    date = null,
+                                    time = eventTime
+                                )
+                            )
+                        }
+                    ) {
+                        Text("Save",
+                            style = TextStyle(color = Color.Black, fontSize = 12.sp))
+                    }
+                }
 
                 OutlinedTextField(
                     value = "Title",
                     modifier = Modifier
+                        .fillMaxWidth()
                         .padding(8.dp),
-                    onValueChange = {},
+                    onValueChange = { eventTitle = it },
                     label = { Text("Title") }
                 )
 
                 OutlinedTextField(
                     value = "Description",
                     modifier = Modifier
+                        .fillMaxWidth()
                         .padding(8.dp),
-                    onValueChange = {},
+                    onValueChange = { eventDescription = it },
                     label = { Text("Description") }
                 )
 
-                DatePickerDocked()
-
-                DialWithDialog()
+                DatePickerDocked(saveDate = { eventDate = it })
+                DialWithDialog(saveTime = { eventTime = it })
+                InvitationList(
+                    users = users,
+                    onCheck = { invitedUsers = it }
+                )
             }
         }
     }
@@ -281,7 +343,7 @@ fun CreateEventDialog(dismissDialog: () -> Unit) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DatePickerDocked() {
+fun DatePickerDocked(saveDate: (String) -> Unit) {
     var showDatePicker by remember { mutableStateOf(false) }
     val datePickerState = rememberDatePickerState()
     val selectedDate = datePickerState.selectedDateMillis?.let {
@@ -312,23 +374,20 @@ fun DatePickerDocked() {
         )
 
         if (showDatePicker) {
-            Popup(
+            DatePickerDialog(
                 onDismissRequest = { showDatePicker = false },
-                alignment = Alignment.TopStart
+                confirmButton = {
+                    Button(
+                        onClick = { showDatePicker = false }
+                    ) {
+                        saveDate(selectedDate)
+                    }
+                },
             ) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .offset(y = 64.dp)
-                        .shadow(elevation = 4.dp)
-                        .background(MaterialTheme.colorScheme.surface)
-                        .padding(16.dp)
-                ) {
-                    DatePicker(
-                        state = datePickerState,
-                        showModeToggle = false
-                    )
-                }
+                DatePicker(
+                    state = datePickerState,
+                    showModeToggle = false
+                )
             }
         }
     }
@@ -341,10 +400,11 @@ fun convertMillisToDate(millis: Long): String {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DialWithDialog() {
+fun DialWithDialog(saveTime: (String) -> Unit) {
     var showTimePicker by remember { mutableStateOf(false) }
 
     val currentTime = Calendar.getInstance()
+
     val timePickerState = rememberTimePickerState(
         initialHour = currentTime.get(Calendar.HOUR_OF_DAY),
         initialMinute = currentTime.get(Calendar.MINUTE),
@@ -353,28 +413,37 @@ fun DialWithDialog() {
 
     var selectedTime = ""
 
-    OutlinedTextField(
-        value = selectedTime,
-        onValueChange = { },
-        label = { Text("Time") },
-        readOnly = true,
-        trailingIcon = {
-            IconButton(onClick = { showTimePicker = !showTimePicker }) {
-                Icon(
-                    imageVector = Icons.Default.DateRange,
-                    contentDescription = "Select date"
-                )
-            }
-        },
+    Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(64.dp)
-    )
+            .padding(8.dp),
+    ) {
+        OutlinedTextField(
+            value = selectedTime,
+            onValueChange = { },
+            label = { Text("Time") },
+            readOnly = true,
+            trailingIcon = {
+                IconButton(onClick = { showTimePicker = !showTimePicker }) {
+                    Icon(
+                        imageVector = Icons.Default.DateRange,
+                        contentDescription = "Select date"
+                    )
+                }
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(64.dp)
+        )
+    }
+
 
     if(showTimePicker) {
         TimePickerDialog(
             onDismiss = { showTimePicker = false },
-            onConfirm = { selectedTime = getTime(timePickerState) }
+            onConfirm = {
+                saveTime(getTime(timePickerState))
+            }
         ) {
             TimePicker(
                 state = timePickerState,
@@ -413,4 +482,58 @@ fun TimePickerDialog(
         },
         text = { content() }
     )
+}
+
+@Composable
+fun InvitationList(
+    users: List<User>,
+    onCheck: (List<User>) -> Unit
+) {
+    val selectedUsers = remember { mutableStateListOf(*List(users.size) { false }.toTypedArray()) }
+
+    val selectAllState = when {
+        selectedUsers.all { it } -> ToggleableState.On
+        selectedUsers.none { it } -> ToggleableState.Off
+        else -> ToggleableState.Indeterminate
+    }
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp)
+    ) {
+        LazyColumn {
+            item {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text("Select All")
+                    TriStateCheckbox(state = selectAllState, onClick = {
+                        val newState = selectAllState != ToggleableState.On
+                        selectedUsers.forEachIndexed { index, _ ->
+                            selectedUsers[index] = newState
+                        }
+                    })
+                }
+            }
+
+            items(users.size) { index ->
+                val currentUser = users[index]
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween
+
+                ) {
+                    Text(
+                        text = currentUser.name
+                    )
+                    Checkbox(checked = selectedUsers[index], onCheckedChange = { isChecked ->
+                        selectedUsers[index] = isChecked
+                    })
+                }
+            }
+        }
+    }
 }

@@ -3,10 +3,9 @@ package com.example.tstrade.domain.repository
 import android.util.Log
 import com.example.tstrade.domain.entities.EventItem
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.toObject
 import javax.inject.Inject
 
-class EventRepository @Inject constructor (private val firestore: FirebaseFirestore) {
+class EventRepositoryImpl @Inject constructor (private val firestore: FirebaseFirestore) {
 
     companion object { // TODO: must be moved outside for every class that logs to use it
         private const val ERROR_TAG = "ERROR"

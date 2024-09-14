@@ -1,9 +1,9 @@
 package com.example.tstrade
 
-import android.media.tv.AitInfo
+import android.util.Log
 import com.example.tstrade.domain.model.DataProvider
 import com.example.tstrade.domain.model.Response
-import com.example.tstrade.domain.repository.UserRepository
+import com.example.tstrade.domain.repository.UserRepositoryImpl
 import com.google.android.gms.auth.api.identity.BeginSignInRequest
 import com.google.android.gms.auth.api.identity.BeginSignInResult
 import com.google.android.gms.auth.api.identity.SignInClient
@@ -12,7 +12,6 @@ import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuth.AuthStateListener
-import com.google.firebase.auth.GoogleAuthCredential
 import com.google.firebase.auth.GoogleAuthProvider
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.awaitClose
@@ -25,7 +24,7 @@ import javax.inject.Named
 
 class SignInObserver @Inject constructor(
     private val auth: FirebaseAuth,
-    private val userRepository: UserRepository,
+    private val userRepositoryImpl: UserRepositoryImpl,
 
     private var oneTapClient: SignInClient,
     @Named("signInRequest")
@@ -63,11 +62,10 @@ class SignInObserver @Inject constructor(
     suspend fun signInWithGoogle(credential: SignInCredential): Response<AuthResult> {
         val googleCredential = GoogleAuthProvider
             .getCredential(credential.googleIdToken, null)
-
         return authenticateUser(googleCredential)
     }
 
-        private suspend fun authenticateUser(credential: AuthCredential): Response<AuthResult> {
+    private suspend fun authenticateUser(credential: AuthCredential): Response<AuthResult> {
         return if (auth.currentUser != null) {
             authLink(credential)
         } else {
@@ -91,6 +89,19 @@ class SignInObserver @Inject constructor(
             DataProvider.updateAuthState(authResult?.user)
             Response.Success(authResult)
         } catch (e: Exception) {
+            Response.Failure(e)
+        }
+    }
+
+    suspend fun signInAnonymously(): Response<AuthResult> {
+        return try {
+            val authResult = auth.signInAnonymously().await()
+            authResult?.user?.let { user ->
+                Log.i("INFO", "FirebaseAuthSuccess: Anonymous UID: ${user.uid}")
+            }
+            Response.Success(authResult)
+        } catch (e: Exception) {
+            Log.e("Error", "Error")
             Response.Failure(e)
         }
     }

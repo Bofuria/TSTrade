@@ -9,8 +9,10 @@ data class EventItem(
     val author: String = "",
     val name: String = "",
     val description: String = "",
-    var attendants: MutableList<String>? = null,
-    @ServerTimestamp val date: Date? = null
+    val attendants: MutableList<String> = mutableListOf(),
+    val date: Date? = null,
+    val time: String = ""
+
 ) {
     @Exclude
     fun toMap(): Map<String, Any?> {
@@ -20,7 +22,8 @@ data class EventItem(
             "name" to name,
             "description" to description,
             "attendants" to attendants,
-            "date" to date
+            "date" to date,
+            "time" to time
         )
     }
 }
